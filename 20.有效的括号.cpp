@@ -23,7 +23,7 @@ class Solution {
 public:
     bool isValid(string s) {
         std::stack<std::string::value_type> stk;
-        for(auto x : s) {
+        for(auto &x : s) {
             if(stk.empty()) {
                 stk.push(x);
             }
@@ -36,6 +36,9 @@ public:
                    } else {
                        stk.push(x);
                    }
+                } 
+                else {
+                  stk.push(x);
                 }
             }
         }
