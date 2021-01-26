@@ -3,37 +3,37 @@
  *
  * [225] 用队列实现栈
  */
-
-// @lc code=start
 #include <queue>
 
-class MyStack {
+// @lc code=start
+class MyStack
+{
 private:
-    std::queue<int> queue__;
+    
 public:
     /** Initialize your data structure here. */
-    MyStack() {
-        
+    MyStack()
+    {
     }
-    
+
     /** Push element x onto stack. */
-    void push(int x) {
-        queue__.push(x);
+    void push(int x)
+    {
     }
-    
+
     /** Removes the element on top of the stack and returns that element. */
-    int pop() {
-
+    int pop()
+    {
     }
-    
+
     /** Get the top element. */
-    int top() {
-
+    int top()
+    {
     }
-    
-    /** Returns whether the stack is empty. */
-    bool empty() {
 
+    /** Returns whether the stack is empty. */
+    bool empty()
+    {
     }
 };
 
@@ -46,4 +46,3 @@ public:
  * bool param_4 = obj->empty();
  */
 // @lc code=end
-
