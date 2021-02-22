@@ -12,7 +12,7 @@
 // @lc code=start
 class Solution {
 public:
-    int trap(vector<int>& height) {
+    int trap1(vector<int>& height) {
         // 非dp解法:
         if(height.size() == 0) return 0;
         int sum = 0;
@@ -33,6 +33,32 @@ public:
             }
         }
         return sum;
+    }
+
+    // save answer of sub-question
+    int trap(vector<int> & height) {
+        if(height.size() == 0) return 0;
+
+        std::vector<int> lMaxStore(height.size(), 0);
+        std::vector<int> rMaxStore(height.size(), 0);
+
+        for(int i = 1; i < height.size() - 1; i++) {
+            lMaxStore[i] = std::max(height[i-1], lMaxStore[i-1]);
+        }
+        for(int i = height.size()-2; i>=0; i--) {
+            rMaxStore[i] = std::max(height[i+1], rMaxStore[i+1]);
+        }
+
+        int sum = 0;
+        for(int i = 1; i < height.size() - 1; i++) {
+            int min = std::min(lMaxStore[i], rMaxStore[i]);
+            if(height[i] < min) {
+                sum += (min - height[i]);
+            }
+        }
+
+        return sum;
+
     }
 };
 
