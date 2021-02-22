@@ -15,33 +15,54 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-#define _DEBUG_
+ #include <queue>
+ #include <vector>
 
-#ifdef _DEBUG_
+//   struct ListNode {
+//       int val;
+//       ListNode *next;
+//       ListNode() : val(0), next(nullptr) {}
+//       ListNode(int x) : val(x), next(nullptr) {}
+//       ListNode(int x, ListNode *next) : val(x), next(next) {}
+//   };
 
-struct ListNode {
-    int val;
-    ListNode *next;
-
-    ListNode() : val(0), next(nullptr) {}
-
-    ListNode(int x) : val(x), next(nullptr) {}
-
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
-}
-#endif
+// namespace std {
+//     template <> 
+//   struct greater<ListNode*> {
+//   bool operator() (ListNode* x, ListNode *  y) const {return x->val >y->val;}
+//   typedef ListNode* first_argument_type;
+//   typedef ListNode* second_argument_type;
+//   typedef bool result_type;
+// };
+// }
 
 class Solution {
 public:
-    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
-        ListNode *cursor1 = l1;
-        ListNode *cursor2 = l2;
-        ListNode *linker = nullptr;
-        linker = l1->val < l2->val ? l1 : l2;
-
-        while (l1 != nullptr && l2 != nullptr) {
-
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1 == nullptr) return l2;
+        if(l2 == nullptr) return l1;
+        ListNode dummy;
+        ListNode* end = &dummy;
+    
+        while(l1 != nullptr && l2 != nullptr) {
+            if(l1->val < l2->val) {
+                end->next = l1;
+                l1 = l1->next;
+            } else {
+                end->next = l2;
+                l2=l2->next;
+            }
+            end = end->next;
         }
+
+        if(l1 == nullptr) {
+            end->next = l2;
+        } else {
+            end->next= l1;
+        }
+
+       return dummy.next;
     }
 };
 // @lc code=end
+
