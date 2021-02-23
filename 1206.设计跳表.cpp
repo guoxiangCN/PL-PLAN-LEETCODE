@@ -8,17 +8,30 @@
  * 2021/02/23
  */
 #include <vector>
+#include <chrono>
 #include <iostream>
 #include <cassert>
-#include <ctime>
+#include <time.h>
 #include <atomic>
 #include <random>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define NEVER_REACH do {                                                       \
      fprintf(stderr, "NEVER_REACH CODE RAN at %s:%d\n", __FILE__, __LINE__);    \
      exit(1);                                                                   \
      } while(0)
+
+
+
+int RandomHeight() {
+    int K = 1;
+    std::random_device rd;
+    std::mt19937 eng(rd());
+    std::uniform_int_distribution<int> dis(0, 1);
+    while (dis(eng)) K++;
+    return K;
+}
 
  // @lc code=start
 class Skiplist {
@@ -39,13 +52,7 @@ public:
         assert(x == nullptr || x->val >= num);
 
         // 1/4概率给新的SkipListNode增加level.
-        int level = 1;
-        time_t s = time(nullptr);
-        if (static_cast<int>(s) % 4 == 0) {
-            std::default_random_engine dre;
-            std::uniform_int_distribution<int> distribution(2, kMaxLevel);
-            level = distribution(dre);
-        }
+        int level = std::min(RandomHeight(), kMaxLevel);
 
         if (level > max_height_) {
             for (int i = max_height_.load(); i < kMaxLevel; i++) {
@@ -75,6 +82,10 @@ public:
             // fprintf(stdout, "delete-op \n");
         }
         return true;
+    }
+
+    int getMaxHeight() const {
+        return max_height_.load();
     }
 
 private:
@@ -126,32 +137,36 @@ private:
     };
     Node head_;
     std::atomic<int32_t> max_height_;
-    static const int kMaxLevel = 6;
+    static const int kMaxLevel = 64;
 };
 
-//int main(int argc, char** argv) {
-//    Skiplist list;
-//    list.add(1);
-//    list.add(2);
-//    list.add(3);
-//    list.add(1);
-//    list.add(2);
-//    list.add(2);
-//
-//    std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
-//    std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
-//    std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
-//    std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
-//    std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
-//
-//    list.erase(2);
-//
-//    std::cout << "after- erase--" << std::endl;
-//
-//    std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
-//    std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
-//    std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
-//    std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
-//    std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
-//	return 0;
-//}
+int main(int argc, char** argv) {
+    Skiplist list;
+
+
+    auto start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    for (int i = 0; i < 400000; i++) {
+        list.add(i);
+   }
+    auto end = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    std::cout << "insert 100w elapsed mills:" << static_cast<int>(end - start) << std::endl;
+
+    std::cout << "MaxHeight" << list.getMaxHeight() << std::endl;
+
+    std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
+    std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
+    std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
+    std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
+    std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
+
+    list.erase(2);
+
+    std::cout << "after- erase--" << std::endl;
+
+    std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
+    std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
+    std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
+    std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
+    std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
+	return 0;
+}
