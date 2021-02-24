@@ -69,18 +69,15 @@ public:
     }
 
     bool erase(int num) {
-        for (;;) {
             Node* prevs[kMaxLevel] = { 0 };
             Node* sNode = FindGreaterOrEqual(num, prevs);
             if (sNode == nullptr || sNode->val != num) {
-                break;
+                return false;
             }
             for (int i = 0; i < sNode->GetHeight(); i++) {
                 prevs[i]->SetNext(i, sNode->GetNext(i));
             }
             delete sNode;
-            // fprintf(stdout, "delete-op \n");
-        }
         return true;
     }
 
@@ -140,33 +137,33 @@ private:
     static const int kMaxLevel = 64;
 };
 
-int main(int argc, char** argv) {
-    Skiplist list;
+// int main(int argc, char** argv) {
+//     Skiplist list;
 
 
-    auto start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    for (int i = 0; i < 400000; i++) {
-        list.add(i);
-   }
-    auto end = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    std::cout << "insert 100w elapsed mills:" << static_cast<int>(end - start) << std::endl;
+//     auto start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+//     for (int i = 0; i < 400000; i++) {
+//         list.add(i);
+//    }
+//     auto end = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+//     std::cout << "insert 100w elapsed mills:" << static_cast<int>(end - start) << std::endl;
 
-    std::cout << "MaxHeight" << list.getMaxHeight() << std::endl;
+//     std::cout << "MaxHeight" << list.getMaxHeight() << std::endl;
 
-    std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
-    std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
-    std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
-    std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
-    std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
+//     std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
+//     std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
+//     std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
+//     std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
+//     std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
 
-    list.erase(2);
+//     list.erase(2);
 
-    std::cout << "after- erase--" << std::endl;
+//     std::cout << "after- erase--" << std::endl;
 
-    std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
-    std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
-    std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
-    std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
-    std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
-	return 0;
-}
+//     std::cout << std::boolalpha << "contains 1 :" << list.search(1) << std::endl;
+//     std::cout << std::boolalpha << "contains 2 :" << list.search(2) << std::endl;
+//     std::cout << std::boolalpha << "contains 3 :" << list.search(3) << std::endl;
+//     std::cout << std::boolalpha << "contains 4 :" << list.search(4) << std::endl;
+//     std::cout << std::boolalpha << "contains 5 :" << list.search(5) << std::endl;
+// 	return 0;
+// }
